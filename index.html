@@ -1,25 +1,72 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
     <title>Stripe Fee Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 30px;
+            max-width: 500px;
+            margin: auto;
+        }
+        label, input {
+            display: block;
+            margin: 10px 0 5px;
+            width: 100%;
+        }
+        button {
+            margin-top: 15px;
+            padding: 10px;
+            width: 100%;
+            background: #007bff;
+            color: white;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        h2 {
+            margin-bottom: 20px;
+        }
+        #result {
+            margin-top: 20px;
+            font-weight: bold;
+            color: green;
+        }
+    </style>
 </head>
 <body>
+
     <h2>Stripe Fee Calculator</h2>
-    <form method="post">
-        <label>Amount You Want to Receive (AED):</label><br>
-        <input type="number" step="0.01" name="amount" required><br><br>
 
-        <label>Percent Fee (e.g. 2.9 for 2.9%):</label><br>
-        <input type="number" step="0.01" name="percent" value="2.9" required><br><br>
+    <label for="amount">Amount You Want to Receive (AED):</label>
+    <input type="number" id="amount" step="0.01" required>
 
-        <label>Fixed Fee (e.g. 1 for AED 1.00):</label><br>
-        <input type="number" step="0.01" name="fixed" value="1.0" required><br><br>
+    <label for="percent">Percent Fee (e.g. 2.9):</label>
+    <input type="number" id="percent" step="0.01" value="2.9" required>
 
-        <button type="submit">Calculate</button>
-    </form>
+    <label for="fixed">Fixed Fee (e.g. 1.00):</label>
+    <input type="number" id="fixed" step="0.01" value="1.00" required>
 
-    {% if result %}
-        <h3>{{ result }}</h3>
-    {% endif %}
+    <button onclick="calculate()">Calculate Final Charge</button>
+
+    <div id="result"></div>
+
+    <script>
+        function calculate() {
+            const amount = parseFloat(document.getElementById('amount').value);
+            const percent = parseFloat(document.getElementById('percent').value) / 100;
+            const fixed = parseFloat(document.getElementById('fixed').value);
+
+            if (isNaN(amount) || isNaN(percent) || isNaN(fixed)) {
+                document.getElementById('result').textContent = "Please enter valid numbers.";
+                return;
+            }
+
+            const finalAmount = ((amount + fixed) / (1 - percent)).toFixed(2);
+            document.getElementById('result').textContent = `Charge the customer: AED ${finalAmount}`;
+        }
+    </script>
+
 </body>
 </html>
